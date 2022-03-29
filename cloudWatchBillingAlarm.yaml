@@ -1,0 +1,41 @@
+Description: "This CloudFormation template will set up an SMS Billing Alarm."
+Parameters:
+  AlarmThreshold:
+    Type: Number
+    Description:
+      "Enter your $USD threshold here (ex: 100)"
+      Default: 10
+  SNSTopicName:
+    Type: String
+    Description: 'Name of SNS Topic'
+    Default: 'BillingAlarmTopic'
+  SMSNumber:
+    Type: String
+    Description: 'Your SMS Number (ex: +15551234567)'
+    Default: '+380954895039'
+Resources:
+  CloudWatchBillingAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: "CF_BillingAlarm"
+      Namespace: AWS/Billing
+      MetricName: EstimatedCharges
+      Dimensions:
+      - Name: Currency
+        Value: USD
+      Statistic: Maximum
+      Period: 21600
+      EvaluationPeriods: 1
+      Threshold: !Ref AlarmThreshold
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions: [!Ref BillingSNSTopic]
+  BillingSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      TopicName: !Ref SNSTopicName
+  BillingSNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: !Ref SMSNumber
+      Protocol: sms
+      TopicArn: !Ref BillingSNSTopic
