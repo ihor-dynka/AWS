@@ -1,0 +1,46 @@
+Description: "Creates budget and alert when budget reached"
+Parameters:
+  BudgetLimit:
+    Type: Number
+    Description: "Budget limit in $"
+    Default: 15
+  AlertThershold1:
+    Type: Number
+    Description: "When this amount (in %) is reached, the first notification will be sent"
+    Default: 60
+  AlertThershold2:
+    Type: Number
+    Description: "When this amount (in %) is reached, the second notification will be sent"
+    Default: 90
+  Email:
+    Type: String
+    Description: "Email address"
+    Default: ihordynka@gmail.com
+Resources:
+  CourseBudget:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetLimit:
+          Amount: !Ref BudgetLimit
+          Unit: USD
+        TimeUnit: MONTHLY
+        TimePeriod:
+          Start: 1654447876
+          End: 1662396676
+        BudgetType: COST
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Ref AlertThershold1
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref Email
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: !Ref AlertThershold2
+          Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Ref Email
