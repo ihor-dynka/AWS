@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: 10.0.0.0/16
+
+  InternetGateway:
+    Type: "AWS::EC2::InternetGateway"
+    Properties: {}
+
+  InternetGatewayAttachment:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  AZ1:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: !Ref SubnetsTemplate
+      Parameters:
+        AvailabilityZone: us-east-1a
+        PublicSubnetCIDR: 10.0.10.0/24
+        DBSubnetCIDR: 10.0.11.0/24
+        VPC: !Ref VPC
+        IGW: !Ref InternetGateway
+    DependsOn:
+      - VPC
+      - InternetGateway
+
+  AZ2:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: !Ref SubnetsTemplate
+      Parameters:
+        AvailabilityZone: us-east-1b
+        PublicSubnetCIDR: 10.0.20.0/24
+        DBSubnetCIDR: 10.0.21.0/24
+        VPC: !Ref VPC
+        IGW: !Ref InternetGateway
+    DependsOn:
+      - VPC
+      - InternetGateway
+
+Parameters:
+  SubnetsTemplate:
+    Type: String

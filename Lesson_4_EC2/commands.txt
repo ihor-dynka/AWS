@@ -1,0 +1,14 @@
+#list volumes
+lsblk
+
+#list file systems
+file -s /dev/xvdf
+
+#create file system
+sudo mkfs -t xfs /dev/xvdf
+
+mkdir shared_folder
+cd shared_folder
+
+#mount
+sudo mount /dev/xvdf shared_folder
