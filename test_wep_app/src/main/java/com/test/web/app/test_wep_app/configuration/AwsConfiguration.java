@@ -5,21 +5,35 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @AllArgsConstructor
-public class AwsS3Configuration {
+public class AwsConfiguration {
 
-	private AwsS3Config awsConfig;
+	private AwsConfig awsConfig;
 
 	@Bean
 	public AmazonS3 getAmazonS3() {
 		return AmazonS3ClientBuilder.standard()
-			.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsConfig.getAccessKey(), awsConfig.getSecretKey())))
+			.withCredentials(getCredentialsProvider())
 			.withRegion(Regions.US_EAST_1)
 			.build();
+	}
+
+	@Bean
+	public AmazonSQS getAmazonSQS() {
+		return AmazonSQSClientBuilder.standard()
+			.withCredentials(getCredentialsProvider())
+			.withRegion(Regions.US_EAST_1)
+			.build();
+	}
+
+	private AWSStaticCredentialsProvider getCredentialsProvider() {
+		return new AWSStaticCredentialsProvider(new BasicAWSCredentials(awsConfig.getAccessKey(), awsConfig.getSecretKey()));
 	}
 }

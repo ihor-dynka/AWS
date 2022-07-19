@@ -21,7 +21,7 @@ server:
   port: 8081
 
 aws:
-  accessKey: AKIA2RHQG7XODNHYSI7Z
-  secretKey: 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
+  accessKey:
+  secretKey:
   s3BucketName: uploaded-images-storage
 

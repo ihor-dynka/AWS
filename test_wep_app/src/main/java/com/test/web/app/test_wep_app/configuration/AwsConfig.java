@@ -7,9 +7,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("aws")
 @Configuration
 @Data
-public class AwsS3Config {
+public class AwsConfig {
 
 	private String accessKey;
 	private String secretKey;
 	private String s3BucketName;
+	private String sqsRegion;
 }
