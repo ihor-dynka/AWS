@@ -25,6 +25,8 @@ public class ImageService {
 
 	private AwsS3Service awsS3Service;
 
+	private ImageQueueProducer imageQueueProducer;
+
 	public List<ImageDetails> getAll() {
 		return imagesRepository.findAll()
 			.stream()
@@ -50,16 +52,21 @@ public class ImageService {
 	@Transactional
 	@SneakyThrows
 	public ImageDetails uploadImage(String name, String customName, MultipartFile file) {
-		awsS3Service.uploadImage(name, customName, file);
+		var url = awsS3Service.uploadImage(name, customName, file);
 
 		var imageEntity = imagesRepository.saveAndFlush(ImageEntity.builder()
 			.name(name)
 			.fileExtension(FileUtils.extension(Objects.requireNonNull(file.getOriginalFilename())))
 			.size(file.getSize())
+			.downloadUrl(url)
 			.updatedAt(LocalDateTime.now())
 			.build());
 
-		return ImageMapper.toImageDetails(imageEntity);
+		var imageDetails = ImageMapper.toImageDetails(imageEntity);
+
+		imageQueueProducer.sendMessageToQueue(imageDetails);
+
+		return imageDetails;
 	}
 
 	@Transactional

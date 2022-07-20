@@ -30,6 +30,9 @@ public class ImageEntity {
 	@Column(name = "file_extension")
 	private String fileExtension;
 
+	@Column(name = "download_url")
+	private String downloadUrl;
+
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 }

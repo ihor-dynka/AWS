@@ -11,6 +11,7 @@ public class ImageMapper {
 			.name(imageEntity.getName())
 			.fileExtension(imageEntity.getFileExtension())
 			.size(imageEntity.getSize())
+			.downloadUrl(imageEntity.getDownloadUrl())
 			.updatedAt(imageEntity.getUpdatedAt())
 			.build();
 	}

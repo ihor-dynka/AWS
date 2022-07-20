@@ -5,6 +5,8 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import lombok.AllArgsConstructor;
@@ -28,6 +30,14 @@ public class AwsConfiguration {
 	@Bean
 	public AmazonSQS getAmazonSQS() {
 		return AmazonSQSClientBuilder.standard()
+			.withCredentials(getCredentialsProvider())
+			.withRegion(Regions.US_EAST_1)
+			.build();
+	}
+
+	@Bean
+	public AmazonSNS getAmazonSNS() {
+		return AmazonSNSClientBuilder.standard()
 			.withCredentials(getCredentialsProvider())
 			.withRegion(Regions.US_EAST_1)
 			.build();

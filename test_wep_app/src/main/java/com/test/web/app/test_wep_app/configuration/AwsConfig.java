@@ -13,4 +13,6 @@ public class AwsConfig {
 	private String secretKey;
 	private String s3BucketName;
 	private String sqsRegion;
+	private String snsTopicArn;
+	private String sqsQueueUrl;
 }

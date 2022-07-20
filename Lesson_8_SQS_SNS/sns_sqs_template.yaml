@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Template to Create SQS queue, SNS Topic and Email Subscriptions
+
+Parameters:
+  QueueName:
+    Type: String
+    Description: queue for image uploading
+    Default: UploadImagesQueue
+
+  SNSTopic:
+    Type: String
+    Description: topic name
+    Default: upload-images-topic
+
+Resources:
+  UploadImagesStandartQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref QueueName
+      Protocol: sqs
+      Endpoint: !GetAtt UploadImagesStandartQueue.Arn
+      TopicArn: !Ref UploadImagesSNSTopic
+
+  UploadImagesSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: SNSTopic
+
+Outputs:
+  sqsQueueUrl:
+    Description: Queue URL for image uploding
+    Value: !Ref UploadImagesStandartQueue
+
+  StandardQueueArn:
+    Description: Queue Arn of image uploading queue
+    Value: !GetAtt UploadImagesStandartQueue.Arn
+
+  snsTopicArn:
+    Description: ARN of created SNS topic
+    Value: !Ref UploadImagesSNSTopic

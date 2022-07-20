@@ -12,7 +12,7 @@ public class ImagesControllerAdvice {
 
 	@ExceptionHandler(ObjectNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	ExceptionResponse imageNotFoundHandler(ObjectNotFoundException exception) {
+	public ExceptionResponse imageNotFoundHandler(ObjectNotFoundException exception) {
 		return new ExceptionResponse(exception.getMessage());
 	}
 }

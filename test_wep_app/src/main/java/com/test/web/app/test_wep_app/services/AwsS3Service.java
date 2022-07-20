@@ -18,7 +18,7 @@ public class AwsS3Service {
 	private AwsConfig awsConfig;
 
 	@SneakyThrows
-	public void uploadImage(String name, String customName, MultipartFile file) {
+	public String uploadImage(String name, String customName, MultipartFile file) {
 		checkIfBucketExists();
 
 		var metadata = new ObjectMetadata();
@@ -28,6 +28,8 @@ public class AwsS3Service {
 		var request = new PutObjectRequest(awsConfig.getS3BucketName(), customName, file.getInputStream(), metadata);
 		request.setMetadata(metadata);
 		amazonS3.putObject(request);
+
+		return amazonS3.getUrl(awsConfig.getS3BucketName(), name).toString();
 	}
 
 	@SneakyThrows
