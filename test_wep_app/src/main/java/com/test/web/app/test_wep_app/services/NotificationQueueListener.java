@@ -11,7 +11,7 @@ public class NotificationQueueListener {
 	private ImageQueueProducer imageQueueProducer;
 	private EmailNotificationsService emailNotificationsService;
 
-	@Scheduled(fixedRate = 3000)
+//	@Scheduled(fixedRate = 3000)
 	public void readQueueBatchAndSendToSns() {
 		imageQueueProducer.readMessages()
 			.forEach(message -> {

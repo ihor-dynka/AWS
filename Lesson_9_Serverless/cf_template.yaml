@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Template to Create SQS queue, SNS Topic and Email Subscriptions
+
+Parameters:
+  QueueName:
+    Type: String
+    Description: queue for image uploading
+    Default: UploadImagesQueue
+
+  SNSTopic:
+    Type: String
+    Description: topic name
+    Default: upload-images-topic
+
+  DbName:
+    Type: String
+    Default: images
+  DbUsername:
+    Type: String
+    Default: admin
+  DbPassword:
+    Type: String
+    Default: password
+
+Resources:
+  UploadImagesStandartQueue:
+    Type: AWS::SQS::Queue
+
+  SnsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      QueueName: !Ref QueueName
+      Protocol: sqs
+      Endpoint: !GetAtt UploadImagesStandartQueue.Arn
+      TopicArn: !Ref UploadImagesSNSTopic
+
+  UploadImagesSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: SNSTopic
+
+  SecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: "A security group that allows inbound access to a MySQL DB instance."
+      VpcId: ""
+      SecurityGroupIngress:
+        - FromPort: 3306
+          ToPort: 3306
+          IpProtocol: "tcp"
+          Description: "Allow connections to a MySql DB instance"
+          CidrIp: ""
+      GroupName: "allow-mysql-traffic"
+
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref DbName
+      MasterUsername: !Ref DbUsername
+      MasterUserPassword: !Ref DbPassword
+      Engine: MySQL
+      DBInstanceClass: db.t2.micro
+      StorageType: gp2
+      PubliclyAccessible: True
+      AllocatedStorage: "20"
+      DBInstanceIdentifier: !Join ["-", ["RDSInstance", !Ref "AWS::Region"]]
+
+Outputs:
+  sqsQueueUrl:
+    Description: Queue URL for image uploding
+    Value: !Ref UploadImagesStandartQueue
+
+  StandardQueueArn:
+    Description: Queue Arn of image uploading queue
+    Value: !GetAtt UploadImagesStandartQueue.Arn
+
+  snsTopicArn:
+    Description: ARN of created SNS topic
+    Value: !Ref UploadImagesSNSTopic
+
+  rdsEndpoint:
+    Value: !GetAtt RDSInstance.Endpoint.Address

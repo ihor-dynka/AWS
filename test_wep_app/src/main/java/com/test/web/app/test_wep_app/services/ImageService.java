@@ -1,5 +1,6 @@
 package com.test.web.app.test_wep_app.services;
 
+import com.amazonaws.services.ecr.model.ImageNotFoundException;
 import com.test.web.app.test_wep_app.exceptions.ObjectNotFoundException;
 import com.test.web.app.test_wep_app.dto.images.ImageDetails;
 import com.test.web.app.test_wep_app.entities.ImageEntity;
@@ -35,7 +36,7 @@ public class ImageService {
 	}
 
 	public ImageDetails getRandomImage() {
-		return ImageMapper.toImageDetails(imagesRepository.findRandomEntity().get());
+		return ImageMapper.toImageDetails(imagesRepository.findRandomEntity().orElseThrow(() -> new ImageNotFoundException("")));
 	}
 
 	@SneakyThrows

@@ -15,4 +15,5 @@ public class AwsConfig {
 	private String sqsRegion;
 	private String snsTopicArn;
 	private String sqsQueueUrl;
+	private String lambdaFunctionName;
 }

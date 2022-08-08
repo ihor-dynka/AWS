@@ -24,7 +24,6 @@ public class ImageQueueProducer {
 			.withMessageBody("Image has been uploaded. \n" +
 				imageDetails.toString());
 
-
 		amazonSQS.sendMessage(request);
 	}
 

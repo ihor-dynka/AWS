@@ -3,6 +3,8 @@ package com.test.web.app.test_wep_app.configuration;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.lambda.AWSLambdaAsync;
+import com.amazonaws.services.lambda.AWSLambdaAsyncClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.sns.AmazonSNS;
@@ -38,6 +40,14 @@ public class AwsConfiguration {
 	@Bean
 	public AmazonSNS getAmazonSNS() {
 		return AmazonSNSClientBuilder.standard()
+			.withCredentials(getCredentialsProvider())
+			.withRegion(Regions.US_EAST_1)
+			.build();
+	}
+
+	@Bean
+	public AWSLambdaAsync getAmazonLambdaClient() {
+		return AWSLambdaAsyncClientBuilder.standard()
 			.withCredentials(getCredentialsProvider())
 			.withRegion(Regions.US_EAST_1)
 			.build();

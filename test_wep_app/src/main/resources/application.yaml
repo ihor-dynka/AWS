@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://{host}:3306/images?useSSL=false
+    url: jdbc:mysql://images.ce6extw0zxd7.us-east-1.rds.amazonaws.com:3306/images?useSSL=false
     username: admin
     password: password
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -11,7 +11,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create-drop #disable spring hibernate schema creation
+      ddl-auto: create #disable spring hibernate schema creation
   sql:
     init:
       mode: always #initialize all type of database, not only h2 which is default one
@@ -21,9 +21,9 @@ server:
   port: 8081
 
 aws:
-  accessKey:
-  secretKey:
+  accessKey: AKIA2RHQG7XOLTRV4B4J
+  secretKey: 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
   s3BucketName: uploaded-images-storage
-  snsTopicArn:
-  sqsQueueUrl:
-
+  snsTopicArn: arn:aws:sns:us-east-1:724205764060:ImageProcessorApp-UploadImagesSNSTopic-1F5V19YI5Z6TU
+  sqsQueueUrl: https://sqs.us-east-1.amazonaws.com/724205764060/ImageProcessorApp-UploadImagesStandartQueue-rQzKdeSE2Gls
+  lambda-function-name: imageprocessorlambda

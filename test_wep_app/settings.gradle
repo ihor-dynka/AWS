@@ -1,1 +1,3 @@
 rootProject.name = 'test_wep_app'
+include 'imageProcessor'
+
