@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for image-upload-batch-notifier
+Globals:
+  Function:
+    Timeout: 20
+
+Resources:
+  SendNotificationsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/ImageProcessingAwsLambda-1.0-SNAPSHOT.zip
+      Handler: com.test.lambda.image_processor.services.ImageProcessHandler::handleRequest
+      Runtime: java11
+      MemorySize: 512
+      Role: arn:aws:iam::209813303538:role/lambda-role
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: AllAtOnce
+      Events:
+        SendNotifications:
+          Type: Api
+          Properties:
+            Path: /notifications/send
+            Method: GET
+      Environment:
+        Variables:
+          SQS_QUEUE_URL: https://sqs.eu-central-1.amazonaws.com/209813303538/UploadImagesQueue
+          SNS_TOPIC_ARN: arn:aws:sns:eu-central-1:724205764060:upload-images-topic
+
+Outputs:
+  SendNotificationApi:
+    Description: "API Gateway endpoint URL for Send Notification function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/notificatons/send"
+  FunctionArn:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt SendNotificationsFunction.Arn

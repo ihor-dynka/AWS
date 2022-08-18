@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  AvailabilityZone:
+    Type: "AWS::EC2::AvailabilityZone::Name"
+  PublicSubnetCIDR:
+    Type: String
+  DBSubnetCIDR:
+    Type: String
+  VPC:
+    Type: "AWS::EC2::VPC::Id"
+  IGW:
+    Type: String
+
+Resources:
+  PublicSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: !Ref PublicSubnetCIDR
+      VpcId: !Ref VPC
+      AvailabilityZone: !Ref AvailabilityZone
+      MapPublicIpOnLaunch: true
+
+  DBSubnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: !Ref DBSubnetCIDR
+      VpcId: !Ref VPC
+      AvailabilityZone: !Ref AvailabilityZone
+  DBRouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref DBSubnet
+      RouteTableId: !Ref DBRouteTable
+  DBRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+  PublicRouteTableAssociation:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+  PublicRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+  PublicInternetRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW

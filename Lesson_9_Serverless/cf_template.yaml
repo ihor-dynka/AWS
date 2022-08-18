@@ -23,6 +23,9 @@ Parameters:
     Type: String
     Default: password
 
+  VpcId:
+    Type: String
+
 Resources:
   UploadImagesStandartQueue:
     Type: AWS::SQS::Queue
@@ -44,7 +47,7 @@ Resources:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
       GroupDescription: "A security group that allows inbound access to a MySQL DB instance."
-      VpcId: ""
+      VpcId: !Ref VpcId
       SecurityGroupIngress:
         - FromPort: 3306
           ToPort: 3306
@@ -52,6 +55,12 @@ Resources:
           Description: "Allow connections to a MySql DB instance"
           CidrIp: ""
       GroupName: "allow-mysql-traffic"
+
+  DBSubnetGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Security group for RDS DB Instance."
+      VpcId: !Ref VpcId
 
   RDSInstance:
     Type: AWS::RDS::DBInstance
@@ -64,6 +73,7 @@ Resources:
       StorageType: gp2
       PubliclyAccessible: True
       AllocatedStorage: "20"
+      DBSubnetGroupName: !Ref DBSubnetGroup
       DBInstanceIdentifier: !Join ["-", ["RDSInstance", !Ref "AWS::Region"]]
 
 Outputs:

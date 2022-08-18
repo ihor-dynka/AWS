@@ -5,12 +5,10 @@ import com.test.web.app.test_wep_app.services.EmailNotificationsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
 @RestController
 @RequestMapping("/notifications")
 @AllArgsConstructor
 public class NotificationsController {
-
 	private EmailNotificationsService emailNotificationsService;
 	private AwsLambda awsLambda;
 

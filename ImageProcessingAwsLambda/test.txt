@@ -1,0 +1,9 @@
+./gradlew clean build
+
+sam package --template-file template.yaml --output-template-file package.yaml --s3-bucket sam-lambda-app
+
+aws configure set region eu-central-1
+
+sam deploy --template-file package.yml --stack-name sam-lambda-app --capabilities CAPABILITY_IAM
+
+

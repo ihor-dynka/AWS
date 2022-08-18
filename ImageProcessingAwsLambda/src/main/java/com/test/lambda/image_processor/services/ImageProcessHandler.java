@@ -20,13 +20,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ImageProcessHandler implements RequestHandler<Map<String, Object>, APIGatewayProxyResponseEvent> {
-	private static final String SQS_QUEUE_URL = System.getenv("sqs_queue_url");
-	private static final String SNS_TOPIC_ARN = System.getenv("sns_topic_arn");
+	private static final String SQS_QUEUE_URL = "https://sqs.eu-central-1.amazonaws.com/209813303538/UploadImagesQueue";
+	private static final String SNS_TOPIC_ARN = "arn:aws:sns:eu-central-1:209813303538:upload-images-topic";
 	private static final AmazonSNS amazonSNS = AmazonSNSClientBuilder.standard()
-		.withRegion(Regions.US_EAST_1)
+		.withRegion(Regions.EU_CENTRAL_1)
 		.build();
 	private static final AmazonSQS amazonSQS = AmazonSQSClientBuilder.standard()
-		.withRegion(Regions.US_EAST_1)
+		.withRegion(Regions.EU_CENTRAL_1)
 		.build();
 	private static final int MAX_NUMBER_OF_MESSAGES = 5;
 	private static final int WAIT_TIME_SECONDS = 5;
@@ -39,7 +39,7 @@ public class ImageProcessHandler implements RequestHandler<Map<String, Object>, 
 		Object detail = input.get("detail-type");
 		String detailType = detail == null ? "API" : String.valueOf(detail);
 
-		lambdaLogger.log("Handled Request for ARN = " + SNS_TOPIC_ARN
+		lambdaLogger.log("NEW Handled Request for ARN = " + SNS_TOPIC_ARN
 			+ "; Request Source = " + detailType
 			+ "; Function Name = " + context.getFunctionName()
 			+ "; Remaining Time in millis = " + context.getRemainingTimeInMillis());

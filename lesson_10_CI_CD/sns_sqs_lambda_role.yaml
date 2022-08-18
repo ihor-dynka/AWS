@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Template to Create SQS queue, SNS Topic and Email Subscriptions
+
+Parameters:
+  QueueName:
+    Type: String
+    Description: queue for image uploading
+    Default: UploadImagesQueue
+
+  SNSTopic:
+    Type: String
+    Description: topic name
+    Default: upload-images-topic
+
+  LamdbaRoleName:
+    Type: String
+    Default: lambda-role
+
+Resources:
+  UploadImagesStandartQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Ref QueueName
+
+  UploadImagesSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Ref SNSTopic
+      TopicName: !Ref SNSTopic
+
+  LambdaRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Ref LamdbaRoleName
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        - "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
+        - "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+        - "arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy"
+
+Outputs:
+  UploadImagesStandartQueueUrl:
+    Description: Queue URL for image uploding
+    Value: !Ref UploadImagesStandartQueue
+
+  StandardQueueArn:
+    Description: Queue Arn of image uploading queue
+    Value: !GetAtt UploadImagesStandartQueue.Arn
+
+  TopicArn:
+    Description: ARN of created SNS topic
+    Value: !Ref UploadImagesSNSTopic
+
+Outputs:
+  sqsQueueUrl:
+    Description: Queue URL for image uploding
+    Value: !Ref UploadImagesStandartQueue
+
+  snsTopicArn:
+    Description: ARN of created SNS topic
+    Value: !Ref UploadImagesSNSTopic
+  
+  LambdaRoleArn:
+    Description: Lamdba Role arn
+    Value: !GetAtt LambdaRole.Arn

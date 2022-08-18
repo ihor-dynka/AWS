@@ -25,7 +25,7 @@ public class AwsConfiguration {
 	public AmazonS3 getAmazonS3() {
 		return AmazonS3ClientBuilder.standard()
 			.withCredentials(getCredentialsProvider())
-			.withRegion(Regions.US_EAST_1)
+			.withRegion(Regions.EU_CENTRAL_1)
 			.build();
 	}
 
@@ -33,7 +33,7 @@ public class AwsConfiguration {
 	public AmazonSQS getAmazonSQS() {
 		return AmazonSQSClientBuilder.standard()
 			.withCredentials(getCredentialsProvider())
-			.withRegion(Regions.US_EAST_1)
+			.withRegion(Regions.EU_CENTRAL_1)
 			.build();
 	}
 
@@ -41,7 +41,7 @@ public class AwsConfiguration {
 	public AmazonSNS getAmazonSNS() {
 		return AmazonSNSClientBuilder.standard()
 			.withCredentials(getCredentialsProvider())
-			.withRegion(Regions.US_EAST_1)
+			.withRegion(Regions.EU_CENTRAL_1)
 			.build();
 	}
 
@@ -49,7 +49,7 @@ public class AwsConfiguration {
 	public AWSLambdaAsync getAmazonLambdaClient() {
 		return AWSLambdaAsyncClientBuilder.standard()
 			.withCredentials(getCredentialsProvider())
-			.withRegion(Regions.US_EAST_1)
+			.withRegion(Regions.EU_CENTRAL_1)
 			.build();
 	}
 
